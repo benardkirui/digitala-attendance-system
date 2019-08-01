@@ -140,7 +140,7 @@ class DAO{
       echo "Success data saved";
     }
     else{
-      echo "Failed to insert data";
+      echo "<span style='color: darkred'>The data has already been saved!</span>";
     }
   }
 }
