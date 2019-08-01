@@ -19,10 +19,20 @@
                         $("#ward").load("subcounties.php",{subcounty:subcounty});
                     }
                 );
-                $("#submit").click(
+                $("button").click(
                     function(event)
                     {
                         event.preventDefault();
+                        var name= $("#name").val();
+                        var email= $("#email").val();
+                        var start= $("#start").val();
+                        var specialization= $("#specialization").val();
+                        var gender= $("#gender").val();
+                        var language= $("#language").val();
+                        var name= $("#name").val();
+                        var name= $("#name").val();
+
+
                     }
                 );
             }
@@ -43,7 +53,7 @@
         <div id="container1">
             <table>
                 <tr>
-                    <td>id:</td>
+                    <td>Name:</td>
                     <td><input type = "text" id = "name" class="form-control" >
                         <span class = "error"> </span>
                     </td>
@@ -58,14 +68,14 @@
 
                 <tr>
                     <td>Starting date:</td>
-                    <td> <input type = "date" id = "time" class="form-control">
+                    <td> <input type = "date" id = "start" class="form-control">
                         <span class = "error"></span>
                     </td>
                 </tr>
 
                 <tr>
                     <td>Specialisation:</td>
-                    <td><select id="" class="form-control">
+                    <td><select id="specialization" class="form-control">
                             <option value="">Programming</option>
                             <option value="">Networking</option>
                             <option value="">OS Installation</option>
@@ -88,7 +98,7 @@
                 <tr>
                     <td>Select:</td>
                     <td>
-                        <select id = "subject" class="form-control">
+                        <select id = "language" class="form-control">
                             <option value = "Android">Android</option>
                             <option value = "Java">Java</option>
                             <option value = "C#">C#</option>
@@ -115,7 +125,7 @@
                 </tr>
                 <tr>
                     <td>ID Number:</td>
-                    <td> <input type = "text" id = "course" class="form-control">
+                    <td> <input type = "text" id = "idnumber" class="form-control">
                         <span class = "error"></span>
                     </td>
                 </tr>
