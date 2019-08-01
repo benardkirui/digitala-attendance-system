@@ -12,6 +12,8 @@
         $(document).ready(
             function()
             {
+                $("#notif1").slideToggle(1);
+                $("#notif2").slideToggle(1);
                 $("#subcounty").change(
                     function()
                     {
@@ -29,9 +31,99 @@
                         var specialization= $("#specialization").val();
                         var gender= $("#gender").val();
                         var language= $("#language").val();
-                        var name= $("#name").val();
-                        var name= $("#name").val();
+                        var phonenumber= $("#phonenumber").val();
+                        var idnumber= $("#idnumber").val();
+                        var subcounty= $("#subcounty").val();
+                        var ward= $("#ward").val();
+                        var institution= $("#institution").val();
+                        var course= $("#course").val();
 
+                        if(name=='')
+                        {
+
+                            $("#notif1").slideToggle(1000);
+                            $("#notif1").html("Name cannot be empty");
+                            $("#notif1").css("color","red");
+                            $("#notif1").slideToggle(1000);
+
+                        }
+                        else if(email=='')
+                        {
+                            $("#notif1").slideToggle(1000);
+                            $("#notif1").html("Email cannot be empty");
+                            $("#notif1").css("color","red");
+                            $("#notif1").slideToggle(1000);
+                        }
+                        else if(start=='')
+                        {
+                            $("#notif1").slideToggle(1000);
+                            $("#notif1").html("Start cannot be empty");
+                            $("#notif1").css("color","red");
+                            $("#notif1").slideToggle(1000);
+                        }
+                        else if(phonenumber=='')
+                        {
+                            $("#notif2").slideToggle(1000);
+                            $("#notif2").html("Phone Number cannot be empty");
+                            $("#notif2").css("color","red");
+                            $("#notif2").slideToggle(1000);
+                        }
+                        else if(phonenumber.length!==10)
+                        {
+                            $("#notif2").slideToggle(1000);
+                            $("#notif2").html("Enter correct phone length");
+                            $("#notif2").css("color","red");
+                            $("#notif2").slideToggle(1000);
+                        }
+                        else if(idnumber=='')
+                        {
+                            $("#notif2").slideToggle(1000);
+                            $("#notif2").html("ID Number cannot be empty");
+                            $("#notif2").css("color","red");
+                            $("#notif2").slideToggle(1000);
+                        }
+                        else if(idnumber.length >=9 )
+                        {
+                            $("#notif2").slideToggle(1000);
+                            $("#notif2").html("Enter correct ID length");
+                            $("#notif2").css("color","red");
+                            $("#notif2").slideToggle(1000);
+                        }
+                        else if(course=='')
+                        {
+                            $("#notif2").slideToggle(1000);
+                            $("#notif2").html("Course cannot be empty");
+                            $("#notif2").css("color","red");
+                            $("#notif2").slideToggle(1000);
+                        }
+                        else if(institution=='')
+                        {
+                            $("#notif2").slideToggle(1000);
+                            $("#notif2").html("Institution cannot be empty");
+                            $("#notif2").css("color","red");
+                            $("#notif2").slideToggle(1000);
+                        }
+
+                        else if(ward=='')
+                        {
+                            $("#notif2").slideToggle(1000);
+                            $("#notif2").html("Ward cannot be empty");
+                            $("#notif2").css("color","red");
+                            $("#notif2").slideToggle(1000);
+                        }
+                        else{
+                            $("h2").toggle(1);
+                            //everything is correct
+                            $.post("register.php",{name:name,email:email,start:start,specialization:specialization,gender:gender,language:language,phonenumber:phonenumber,idnumber:idnumber,subcounty:subcounty,ward:ward,institution:institution,course:course},function(data,status)
+                                {
+
+                                    $("h2").html(data);
+                                    $("h2").css("padding","70px 0")
+                                    $("h2").toggle(2000);
+                                    $("div").slideUp(2000);
+                                }
+                            );
+                        }
 
                     }
                 );
@@ -51,6 +143,7 @@
 
     <div class="container">
         <div id="container1">
+            <h4 id="notif1"></h4>
             <table>
                 <tr>
                     <td>Name:</td>
@@ -116,6 +209,7 @@
             </table>
         </div>
         <div id="container2">
+            <h4 id="notif2"></h4>
             <table>
                 <tr>
                     <td>Phone Number:</td>
@@ -187,6 +281,10 @@
     }
     h2{
         color:blue;
+        justify-content: center;
+    }
+
+    h3{
         justify-content: center;
     }
     body{

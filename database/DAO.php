@@ -130,6 +130,19 @@ class DAO{
     }
 
   }
+  
+  public function insertAttachee($name,$email,$start,$specialization,$gender,$language,$phone,$idnumber, $subcounty,$ward,$institution,$course)
+  {
+    $sql="INSERT INTO attachees VALUES('$name','$email','$start','$specialization','$gender','$language','$phone','$idnumber','$subcounty','$ward','$institution','$course')";
+    $result=mysqli_query($this->conn,$sql);
+    if($result)
+    {
+      echo "Success data saved";
+    }
+    else{
+      echo "Failed to insert data";
+    }
+  }
 }
 
  ?>

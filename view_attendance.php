@@ -81,11 +81,13 @@ if(isset($_POST['submit']))
 </div>-->
 <!--<div class="alert alert-warning hide"></div>-->
 <center>
+    <h3 id="notif-success"><?=$_SESSION['error']?></h3>
     <div class="container">
       <div class="col-lg-6">
         <form  action="#" method="POST">
        <div class="card autoHeight" style="border-top: 4px solid #00802b;border-bottom: 4px solid #00802b;border-radius: 4px;">
    <h1 class="card-header">Admin Area</h1>
+
    <div class="card-body">
     <div class="input-group input-group-lg">
         <span class="input-group-addon" id="sizing-addon1"><img src="assets/icon/32px-Crystal_Clear_app_kuser.png"></span>
