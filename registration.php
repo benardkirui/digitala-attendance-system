@@ -118,9 +118,15 @@
                                 {
 
                                     $("h2").html(data);
-                                    $("h2").css("padding","70px 0")
+                                    $("h2").css("padding","20% 0")
                                     $("h2").toggle(2000);
                                     $("div").slideUp(2000);
+                                    $("h2").click(
+                                        function()
+                                        {
+                                            $("body").load("attachee.php");
+                                        }
+                                    );
                                 }
                             );
                         }
