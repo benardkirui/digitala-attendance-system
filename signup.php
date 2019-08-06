@@ -38,7 +38,12 @@ if(isset($_POST["submit"]))
         //the two passwords are equal so proceed to saving them in the database
         $dao= new DAO();
         $dao->insertNewUser($fullname,$username,$idnumber,$location,$isAdmin,md5($password));
-
+        $_SESSION["fullname"]="";
+        $_SESSION["username"]="";
+        $_SESSION["idnumber"]="";
+        $_SESSION["location"]="";
+        $_SESSION["passcode"]="";
+        $_SESSION["password"]="";
     }
 
 

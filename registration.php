@@ -1,4 +1,5 @@
 <?php
+session_start();
 ?>
 
 <!DOCTYPE html>
@@ -9,11 +10,13 @@
     <title></title>
     <script src="assets/js/jquery.min.js"></script>
     <script>
+
         $(document).ready(
             function()
             {
                 $("#notif1").slideToggle(1);
                 $("#notif2").slideToggle(1);
+				$("#notif3").toggle(1);
                 $("#subcounty").change(
                     function()
                     {
@@ -21,6 +24,29 @@
                         $("#ward").load("subcounties.php",{subcounty:subcounty});
                     }
                 );
+
+				$("#email").keyup(
+				function(){
+					var email= $("#email").val();
+					var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+					 if(!regex.test(email)) {
+
+                            $("#notif3").show(1);
+                            $("#notif3").html("Email invalid");
+                            $("#notif3").css("color","red");
+
+					}else{
+
+
+                            $("#notif3").html("Email validated");
+                            $("#notif3").css("color","green");
+                            $("#notif3").hide(2000);
+						}
+
+				}
+				);
+
+
                 $("button").click(
                     function(event)
                     {
@@ -54,6 +80,7 @@
                             $("#notif1").css("color","red");
                             $("#notif1").slideToggle(1000);
                         }
+
                         else if(start=='')
                         {
                             $("#notif1").slideToggle(1000);
@@ -118,13 +145,15 @@
                                 {
 
                                     $("h2").html(data);
-                                    $("h2").css("padding","20% 0")
+                                    $("h2").css("padding-top","300px");
                                     $("h2").toggle(2000);
                                     $("div").slideUp(2000);
-                                    $("h2").click(
+									elem='<center><button>Continue</button></center>';
+                                            $("body").append(elem);
+                                    $("button").click(
                                         function()
                                         {
-                                            $("body").load("attachee.php");
+										$("body").load("attachee.php");
                                         }
                                     );
                                 }
@@ -150,17 +179,18 @@
     <div class="container">
         <div id="container1">
             <h4 id="notif1"></h4>
+			<h4 id="notif3"></h4>
             <table>
                 <tr>
                     <td>Name:</td>
-                    <td><input type = "text" id = "name" class="form-control" >
+                    <td><input type = "text" id = "name" class="form-control" value="<?=$_SESSION['fullname'];?>"  readonly>
                         <span class = "error"> </span>
                     </td>
                 </tr>
 
                 <tr>
                     <td>E-mail: </td>
-                    <td><input type = "text" id = "email" class="form-control">
+                    <td><input type = "email" id = "email" class="form-control">
                         <span class = "error"> </span>
                     </td>
                 </tr>
@@ -225,7 +255,7 @@
                 </tr>
                 <tr>
                     <td>ID Number:</td>
-                    <td> <input type = "text" id = "idnumber" class="form-control">
+                    <td> <input type = "text" id = "idnumber" class="form-control" value="<?=$_SESSION['idnumber'];?>"  readonly>
                         <span class = "error"></span>
                     </td>
                 </tr>

@@ -5,6 +5,23 @@
     <title></title>
   </head>
   <body>
-    <h1>This is the admin page </h1>
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          Title
+        </div>
+        <div class="card-body">
+          body of the card
+        </div>
+      </div>
+    </div>
   </body>
+
+  <style media="screen">
+    .card{
+      width:400px;
+      height: 400px;
+      background-color: green;
+    }
+  </style>
 </html>

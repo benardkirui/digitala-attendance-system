@@ -66,8 +66,9 @@ class DAO{
     if(mysqli_num_rows($result)>0)
     {
       $result=mysqli_fetch_assoc($result);
-      $_SESSION['username']=$result['username'];
+      $_SESSION['fullname']=$result['fullname'];
       $_SESSION['idnumber']=$result['idnumber'];
+      
       $isAdmin=$result['level'];
       if($isAdmin=='admin')
       {
@@ -130,7 +131,7 @@ class DAO{
     }
 
   }
-  
+
   public function insertAttachee($name,$email,$start,$specialization,$gender,$language,$phone,$idnumber, $subcounty,$ward,$institution,$course)
   {
     $sql="INSERT INTO attachees VALUES('$name','$email','$start','$specialization','$gender','$language','$phone','$idnumber','$subcounty','$ward','$institution','$course')";
