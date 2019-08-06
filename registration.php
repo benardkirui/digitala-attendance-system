@@ -140,6 +140,7 @@ session_start();
                         }
                         else{
                             $("h2").toggle(1);
+
                             //everything is correct
                             $.post("register.php",{name:name,email:email,start:start,specialization:specialization,gender:gender,language:language,phonenumber:phonenumber,idnumber:idnumber,subcounty:subcounty,ward:ward,institution:institution,course:course},function(data,status)
                                 {
@@ -205,11 +206,12 @@ session_start();
                 <tr>
                     <td>Specialisation:</td>
                     <td><select id="specialization" class="form-control">
-                            <option value="">Programming</option>
-                            <option value="">Networking</option>
-                            <option value="">OS Installation</option>
-                            <option value="">Technical</option>
-                            <option value="">Other</option>
+                            <option >Programming</option>
+                            <option >Networking</option>
+                            <option >OS Installation</option>
+                            <option >Technical</option>
+                            <option >Cyber Security</option>
+                            <option >Data Analysis</option>
                         </select></td>
                 </tr>
 
@@ -217,8 +219,8 @@ session_start();
                     <td>Gender:</td>
                     <td>
                         <select id="gender" class="form-control">
-                            <option value="">Male</option>
-                            <option value="">Female</option>
+                            <option>Male</option>
+                            <option>Female</option>
                         </select>
                         <span class = "error"></span>
                     </td>

@@ -5,7 +5,7 @@ $_SESSION["error"]="";
 $_SESSION["fullname"]="";
 $_SESSION["username"]="";
 $_SESSION["idnumber"]="";
-$_SESSION["location"]="";
+$_SESSION["phonenumber"]="";
 $_SESSION["passcode"]="";
 $_SESSION["password"]="";
 if(isset($_POST["submit"]))
@@ -13,14 +13,14 @@ if(isset($_POST["submit"]))
     $fullname=$_POST["fullname"];
     $username=$_POST["username"];
     $idnumber=$_POST["idnumber"];
-    $location=$_POST["location"];
+    $phonenumber=$_POST["phonenumber"];
     $passcode=$_POST["passcode"];
     $password=$_POST["password"];
     $password1=$_POST["password2"];
     $_SESSION["fullname"]=$fullname;
     $_SESSION["username"]=$username;
     $_SESSION["idnumber"]=$idnumber;
-    $_SESSION["location"]=$location;
+    $_SESSION["phonenumber"]=$phonenumber;
     $_SESSION["passcode"]=$passcode;
     $_SESSION["password"]=$password;
 
@@ -28,6 +28,14 @@ if(isset($_POST["submit"]))
     if(strlen($password)!=strlen($password1))
     {
         $_SESSION["error"]="Password one is not equal to second password";
+    }
+    elseif (strlen($phonenumber)<10 || strlen($phonenumber)>10 )
+    {
+        $_SESSION["error"]="Phone number not correct length";
+    }
+    elseif (!is_nan($phonenumber))
+    {
+        $_SESSION["error"]="Phone number not acceptable";
     }
     else {
         $isAdmin="not admin";
@@ -37,11 +45,11 @@ if(isset($_POST["submit"]))
         }
         //the two passwords are equal so proceed to saving them in the database
         $dao= new DAO();
-        $dao->insertNewUser($fullname,$username,$idnumber,$location,$isAdmin,md5($password));
+        $dao->insertNewUser($fullname,$username,$idnumber,$phonenumber,$isAdmin,md5($password));
         $_SESSION["fullname"]="";
         $_SESSION["username"]="";
         $_SESSION["idnumber"]="";
-        $_SESSION["location"]="";
+        $_SESSION["phonenumber"]="";
         $_SESSION["passcode"]="";
         $_SESSION["password"]="";
     }
@@ -85,7 +93,7 @@ if(isset($_POST["submit"]))
             </div>
             <div class="form-holder">
                 <span class="lnr lnr-envelope"></span>
-                <input type="text" class="form-control" name="location" placeholder="Location"  required value=<?php echo $_SESSION["location"]; ?>>
+                <input type="text" class="form-control" name="phonenumber" placeholder="Phone Number"  required value=<?php echo $_SESSION["phonenumber"]; ?>>
             </div>
             <div class="form-holder">
                 <span class="lnr lnr-user"></span>

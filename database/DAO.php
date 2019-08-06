@@ -23,7 +23,7 @@ class DAO{
   }
 
   //function to insert into the users database
-  public function insertNewUser($fullname,$username,$idnumber,$location,$isAdmin,$password)
+  public function insertNewUser($fullname,$username,$idnumber,$phonenumber,$isAdmin,$password)
   {
   if($this->checkIfExists($idnumber))
   {
@@ -31,7 +31,7 @@ class DAO{
     $_SESSION['message'] ="";
   }
   else{
-    $sql="INSERT INTO users VALUES('$fullname','$username','$idnumber','$location','$isAdmin','$password')";
+    $sql="INSERT INTO users VALUES('$fullname','$username','$idnumber','$phonenumber','$isAdmin','$password')";
     if(mysqli_query($this->conn,$sql)){
       $_SESSION['message'] ="Inserted Succesfully";
       $_SESSION['error'] ="";
@@ -143,6 +143,91 @@ class DAO{
     else{
       echo "<span style='color: darkred'>The data has already been saved!</span>";
     }
+  }
+
+  public function selectAttachees()
+  {
+    $sql="SELECT * FROM attachees";
+    $result=mysqli_query($this->conn,$sql);
+
+    return $result;
+
+  }
+  public function selectAdmins()
+  {
+    $sql="SELECT * FROM users where level='admin'";
+    $result=mysqli_query($this->conn,$sql);
+
+    return $result;
+
+  }
+
+  public function get_number_attachees()
+  {
+    $sql="select count(*) from attachees;";
+    $result=mysqli_query($this->conn,$sql);
+    if(mysqli_num_rows($result)>0)
+    {
+      $row=mysqli_fetch_assoc($result);
+      return $row['count(*)'];
+    }
+
+  }
+  public function get_number_admins()
+  {
+    $sql="select count(*) from users where level='admin'";
+    $result=mysqli_query($this->conn,$sql);
+    if(mysqli_num_rows($result)>0)
+    {
+      $row=mysqli_fetch_assoc($result);
+      return $row['count(*)'];
+    }
+
+  }
+  public function get_number_supervisors()
+  {
+    $sql="select count(*) from users where level='supervisor'";
+    $result=mysqli_query($this->conn,$sql);
+    if(mysqli_num_rows($result)>0)
+    {
+      $row=mysqli_fetch_assoc($result);
+      return $row['count(*)'];
+    }
+
+  }
+
+
+  public function deleteAttachee($idnumber)
+  {
+    $sql1= "DELETE FROM attachees WHERE idnumber='$idnumber'";
+    $sql2= "DELETE FROM users WHERE idnumber='$idnumber'";
+    $result1=mysqli_query($this->conn,$sql1);
+    $result2=mysqli_query($this->conn,$sql2);
+
+    if($result1 && $result2)
+    {
+      return true;
+    }
+    else{
+      return false;
+    }
+
+  }
+
+  public function deleteAdmin($idnumber)
+  {
+    $sql2= "DELETE FROM users WHERE idnumber='$idnumber'";
+
+    $result2=mysqli_query($this->conn,$sql2);
+
+    if($result2)
+    {
+      return true;
+    }
+    else{
+      return false;
+    }
+
   }
 }
 

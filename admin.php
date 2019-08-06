@@ -1,4 +1,36 @@
 <?php
+include "database/DAO.php";
+$dao= new DAO();
+$_SESSION['error']="";
+$number_attachees=$dao->get_number_attachees();
+$number_admins=$dao->get_number_admins();
+$number_supervisors=$dao->get_number_supervisors();
+if(isset($_GET['delAttachee']))
+{
+    $idnumber=$_GET['idnumber'];
+    if($dao->deleteAttachee($idnumber))
+    {
+        $_SESSION['error']="data deleted !!";
+        $number_attachees=$dao->get_number_attachees();
+    }
+    else{
+        $_SESSION['error']="Not Deleted!!";
+    }
+
+}
+if(isset($_GET['delAdmin']))
+{
+    $idnumber=$_GET['idnumber'];
+    if($dao->deleteAdmin($idnumber))
+    {
+        $_SESSION['error']="data deleted !!";
+        $number_attachees=$dao->get_number_attachees();
+    }
+    else{
+        $_SESSION['error']="Not Deleted!!";
+    }
+
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,45 +51,63 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/plugins.css">
     <link rel="stylesheet" href="assets/css/themes/theme-1.css" id="skin_color" />
+    <link rel="stylesheet" href="assets/css/notif.css">
     <title></title>
 
     <script src="assets/js/jquery.min.js"></script>
     <script>
         $(document).ready(
             function() {
+                $("#attachees").click(
+                    function()
+                    {
+                        $("#container").load('attachees_table.php');
+
+                    }
+                );
+                $("#admin").click(
+                    function()
+                    {
+                        $("#container").load('admin_table.php');
+
+                    }
+                );
 
             });
     </script>
 </head>
+
+  </head>
 <body >
 
-<center>  <h2>Absolute Attachee registration</h2></center>
-<div class="container-fluid container-fullw bg-white">
+<center>  <h2>Admin Management</h2></center>
+<hr>
+<div class="container-fluid container-fullw ">
     <div class="row">
         <div class="col-sm-4">
-            <div class="panel panel-white no-radius text-center">
-                <div class="panel-body">
+            <a>
+            <div class="panel panel-white no-radius text-center" id="attachees">
+                <div class="panel-body" >
                     <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-smile-o fa-stack-1x fa-inverse"></i> </span>
-                    <h2 class="StepTitle">Manage Patients</h2>
+                    <h2 class="StepTitle">Manage Attachees</h2>
 
                     <p class="links cl-effect-1">
-                        <a href="manage-users.php">
-
-                        </a>
+                            Attachees: <?=$number_attachees?>
                     </p>
                 </div>
             </div>
+            </a>
         </div>
         <div class="col-sm-4">
-            <div class="panel panel-white no-radius text-center">
+            <div class="panel panel-white no-radius text-center" id="admin">
                 <div class="panel-body">
                     <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-users fa-stack-1x fa-inverse"></i> </span>
-                    <h2 class="StepTitle">Manage Doctors</h2>
+                    <h2 class="StepTitle">Manage Admins</h2>
 
                     <p class="cl-effect-1">
-                        <a href="manage-doctors.php">
 
-                        </a>
+                            Total Admins: <?=$number_admins?>
+
 
                     </p>
                 </div>
@@ -67,45 +117,38 @@
             <div class="panel panel-white no-radius text-center">
                 <div class="panel-body">
                     <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-terminal fa-stack-1x fa-inverse"></i> </span>
-                    <h2 class="StepTitle"> Appointments</h2>
+                    <h2 class="StepTitle"> Manage Supervisors</h2>
 
                     <p class="links cl-effect-1">
-                        <a href="book-appointment.php">
-                            <a href="appointment-history.php">
-
-                            </a>
-                        </a>
+                            Total Supervisors: <?=$number_supervisors?>
                     </p>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<hr>
+<p id="notif-failed"><?=$_SESSION['error'];?></p>
+<div class="container" id="container">
 
+</div>
 
 </body>
 
-=======
-  </head>
-  <body>
-    <div class="container">
-      <div class="card">
-        <div class="card-header">
-          Title
-        </div>
-        <div class="card-body">
-          body of the card
-        </div>
-      </div>
-    </div>
-  </body>
-
-  <style media="screen">
-    .card{
-      width:400px;
-      height: 400px;
-      background-color: green;
+<style>
+    body{
+        background: url("assets/images/bedge_grunge.png");
     }
-  </style>
+
+    .panel-white:hover{
+        background-color: #1c94c4;
+        color: white;
+    }
+    .panel-white{
+        background-color: white;
+        color: #1c94c4;
+    }
+
+</style>
 
 </html>
