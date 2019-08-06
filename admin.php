@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="assets/css/plugins.css">
     <link rel="stylesheet" href="assets/css/themes/theme-1.css" id="skin_color" />
     <title></title>
+<<<<<<< HEAD
     <script src="assets/js/jquery.min.js"></script>
     <script>
         $(document).ready(
@@ -84,4 +85,27 @@
 
 </body>
 
+=======
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          Title
+        </div>
+        <div class="card-body">
+          body of the card
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <style media="screen">
+    .card{
+      width:400px;
+      height: 400px;
+      background-color: green;
+    }
+  </style>
+>>>>>>> 4bd8499b19ee4ad86595c045e97f7ece892e41f5
 </html>
