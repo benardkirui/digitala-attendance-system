@@ -160,7 +160,7 @@
 
                 <tr>
                     <td>E-mail: </td>
-                    <td><input type = "text" id = "email" class="form-control">
+                    <td><input type = "email" id = "email" class="form-control">
                         <span class = "error"> </span>
                     </td>
                 </tr>

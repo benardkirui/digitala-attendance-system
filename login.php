@@ -47,7 +47,7 @@ $f_emp = $q_emp->fetch_array();
     <span aria-hidden='true'>&times;</span>
   </button>
 </div>";
-						hgwhgjhaG
+
 						
 							$conn->query("UPDATE `timein` SET `out` = '$time' WHERE  `user_no` = '$employee' order by id") or die(mysqli_error());
 					
