@@ -28,14 +28,17 @@ if(isset($_POST["submit"]))
     if(strlen($password)!=strlen($password1))
     {
         $_SESSION["error"]="Password one is not equal to second password";
+        $_SESSION['message'] ="";
     }
     elseif (strlen($phonenumber)<10 || strlen($phonenumber)>10 )
     {
         $_SESSION["error"]="Phone number not correct length";
+        $_SESSION['message'] ="";
     }
-    elseif (!is_nan($phonenumber))
+    elseif (!is_numeric($phonenumber))
     {
         $_SESSION["error"]="Phone number not acceptable";
+        $_SESSION['message'] ="";
     }
     else {
         $isAdmin="not admin";
