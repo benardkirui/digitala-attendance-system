@@ -1,13 +1,13 @@
 <?php
 
 class Config{
-  public $conn;
-  public function __construct()
+
+  public function getConnected()
   {
     $host="localhost";
       $username="root";
-      $password="kiptoo";
-      $dbname="attendance";
+      $password="";
+      $dbname="digital";
       $port=3306;
       $con=mysqli_connect($host,$username,$password,$dbname,$port);
       if(!$con)
@@ -15,13 +15,10 @@ class Config{
         die("There was a connection error");
       }
       else{
-        $this->conn=$con;
+      return $con;
         //connection was succesful
       }
-  }
-  public function getConnected()
-  {
-    return $this->conn;
+    return $con;
   }
 }
 

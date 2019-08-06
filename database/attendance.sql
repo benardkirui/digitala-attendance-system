@@ -1,5 +1,5 @@
-CREATE DATABASE attendance;
-use attendance;
+CREATE DATABASE digital;
+use digital;
 
 
 -- phpMyAdmin SQL Dump
