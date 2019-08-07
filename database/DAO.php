@@ -68,7 +68,9 @@ class DAO{
       $result=mysqli_fetch_assoc($result);
       $_SESSION['fullname']=$result['fullname'];
       $_SESSION['idnumber']=$result['idnumber'];
-      
+      $_SESSION['phonenumber']=$result['phonenumber'];
+
+
       $isAdmin=$result['level'];
       if($isAdmin=='admin')
       {

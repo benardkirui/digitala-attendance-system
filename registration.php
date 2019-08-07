@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 ?>
 
 <!DOCTYPE html>
@@ -251,7 +252,7 @@ session_start();
             <table>
                 <tr>
                     <td>Phone Number:</td>
-                    <td> <input type = "text" id = "phonenumber" class="form-control">
+                    <td> <input type = "text" id = "phonenumber" class="form-control" readonly value="<?=$_SESSION['phonenumber'];?>" >
                         <span class = "error"></span>
                     </td>
                 </tr>

@@ -100,11 +100,11 @@ if(isset($_POST["submit"]))
             </div>
             <div class="form-holder">
                 <span class="lnr lnr-user"></span>
-                <input type="text" class="form-control" name="username" placeholder="Username" required value=<?php echo $_SESSION["username"]; ?>>
+                <input type="text" class="form-control" name="username" placeholder="Username" required autocomplete="off" >
             </div>
             <div class="form-holder">
                 <span class="lnr lnr-lock"></span>
-                <input type="password" class="form-control" name="password" placeholder="Password"  required value=<?php echo $_SESSION["password"]; ?>>
+                <input type="password" class="form-control" name="password" placeholder="Password"  required >
             </div>
             <div class="form-holder">
                 <span class="lnr lnr-lock"></span>

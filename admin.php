@@ -72,6 +72,16 @@ if(isset($_GET['delAdmin']))
 
                     }
                 );
+                $("#supervisor").click(
+                    function()
+                    {
+
+                        $("#container").load('supervisors_table.php');
+
+                    }
+                );
+              
+
 
             });
     </script>
@@ -114,7 +124,7 @@ if(isset($_GET['delAdmin']))
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="panel panel-white no-radius text-center">
+            <div class="panel panel-white no-radius text-center" id="supervisor">
                 <div class="panel-body">
                     <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-terminal fa-stack-1x fa-inverse"></i> </span>
                     <h2 class="StepTitle"> Manage Supervisors</h2>
