@@ -41,7 +41,7 @@
     </div>
   </div>
   <div class="card-footer">
-    <button type="submit"  class="btn btn-success btn-lg btn-block">Submit</button>
+    <button type="button" id="submit"  class="btn btn-success btn-lg btn-block">Submit</button>
   </div>
 </form>
 </div>
@@ -62,10 +62,12 @@
   }
 </style>
 <script type="text/javascript">
+
 $("#submit").click(
     function()
     {
-      preventDefault();
+
+      // preventDefault();
       var fullname=$("#fullname").val();
       var idnumber=$("#idnumber").val();
       var department=$("#department").val();
@@ -73,12 +75,28 @@ $("#submit").click(
       var username=$("#username").val();
       var password=$("#password").val();
       var email=$("#email").val();
-
-
-      $.post("register.php",{fullname:fullname,idnumber:idnumber,department:department,phonenumber:phonenumber,email:email,username:username,password:password},function(data,status)
+      if(fullname=='' || idnumber=='' || department=='' || username=='' || email=='' || phonenumber=='' || password=='' )
       {
-        alert(status);
-      });
+        alert("Some fields cannot be empty");
+      }
+      else{
+        $.post("register.php",{fullname:fullname,idnumber:idnumber,department:department,phonenumber:phonenumber,email:email,username:username,password:password},function(data,status)
+        {
+
+
+          if(data=='success')
+          {
+          $("#container").slideToggle(1000);
+          $("#container").load('supervisors_table.php');
+          $("#container").slideToggle(1000);
+          }
+          else{
+            $("h1").html(data);
+            alert("insert failed");
+          }
+        });
+      }
+
     }
 );
 </script>

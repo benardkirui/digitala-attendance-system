@@ -188,7 +188,7 @@ class DAO{
   }
   public function get_number_supervisors()
   {
-    $sql="select count(*) from users where level='supervisor'";
+    $sql="select count(*) from supervisors";
     $result=mysqli_query($this->conn,$sql);
     if(mysqli_num_rows($result)>0)
     {
@@ -230,6 +230,44 @@ class DAO{
       return false;
     }
 
+  }
+
+  public function deleteSupervisor($idnumber)
+  {
+    $sql2= "DELETE FROM supervisors WHERE idnumber='$idnumber'";
+
+    $result2=mysqli_query($this->conn,$sql2);
+
+    if($result2)
+    {
+      return true;
+    }
+    else{
+      return false;
+    }
+
+  }
+
+  public function insertSupervisor($fullname,$idnumber,$department,$phonenumber,$email,$username,$password)
+  {
+    $password=md5($password);
+    $sql="INSERT INTO supervisors VALUES('$idnumber','$fullname','$department','$phonenumber','$email','$username','$password')";
+    $result=mysqli_query($this->conn,$sql);
+    if($result)
+    {
+    echo "success";
+    }
+    else{
+      echo $sql;
+    }
+  }
+
+  public function selectSupervisors()
+  {
+    $sql="SELECT * FROM `supervisors`";
+    $result=mysqli_query($this->conn,$sql);
+
+    return $result;
   }
 }
 

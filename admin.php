@@ -24,7 +24,20 @@ if(isset($_GET['delAdmin']))
     if($dao->deleteAdmin($idnumber))
     {
         $_SESSION['error']="data deleted !!";
-        $number_attachees=$dao->get_number_attachees();
+        $number_admins=$dao->get_number_admins();
+    }
+    else{
+        $_SESSION['error']="Not Deleted!!";
+    }
+
+}
+if(isset($_GET['delSup']))
+{
+    $idnumber=$_GET['idnumber'];
+    if($dao->deleteSupervisor($idnumber))
+    {
+        $_SESSION['error']="data deleted !!";
+        $number_supervisors=$dao->get_number_supervisors();
     }
     else{
         $_SESSION['error']="Not Deleted!!";
@@ -80,7 +93,15 @@ if(isset($_GET['delAdmin']))
 
                     }
                 );
-              
+                $("#reports").click(
+                    function()
+                    {
+
+                        $("#container").load('reports.php');
+
+                    }
+                );
+
 
 
             });
@@ -94,7 +115,9 @@ if(isset($_GET['delAdmin']))
 <hr>
 <div class="container-fluid container-fullw ">
     <div class="row">
-        <div class="col-sm-4">
+
+
+        <div class="col-sm-3">
             <a>
             <div class="panel panel-white no-radius text-center" id="attachees">
                 <div class="panel-body" >
@@ -108,7 +131,7 @@ if(isset($_GET['delAdmin']))
             </div>
             </a>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <div class="panel panel-white no-radius text-center" id="admin">
                 <div class="panel-body">
                     <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-users fa-stack-1x fa-inverse"></i> </span>
@@ -123,7 +146,7 @@ if(isset($_GET['delAdmin']))
                 </div>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <div class="panel panel-white no-radius text-center" id="supervisor">
                 <div class="panel-body">
                     <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-terminal fa-stack-1x fa-inverse"></i> </span>
@@ -134,8 +157,22 @@ if(isset($_GET['delAdmin']))
                     </p>
                 </div>
             </div>
+          </div>
+            <div class="col-sm-3">
+                <a>
+                <div class="panel panel-white no-radius text-center" id="reports">
+                    <div class="panel-body" >
+                        <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-smile-o fa-stack-1x fa-inverse"></i> </span>
+                        <h2 class="StepTitle">Report</h2>
+
+                        <p class="links cl-effect-1">
+                              Report section
+                        </p>
+                    </div>
+                </div>
+                </a>
+            </div>
         </div>
-    </div>
 </div>
 <hr>
 <p id="notif-failed"><?=$_SESSION['error'];?></p>

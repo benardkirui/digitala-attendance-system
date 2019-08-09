@@ -141,7 +141,7 @@ session_start();
                         }
                         else{
                             $("h2").toggle(1);
-
+                            
                             //everything is correct
                             $.post("register.php",{name:name,email:email,start:start,specialization:specialization,gender:gender,language:language,phonenumber:phonenumber,idnumber:idnumber,subcounty:subcounty,ward:ward,institution:institution,course:course},function(data,status)
                                 {
