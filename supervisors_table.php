@@ -1,7 +1,7 @@
 <?php
 include "database/DAO.php";
 $dao=new DAO();
-$result=$dao->selectAdmins();
+$result=$dao->selectSupervisors();
 
 ?>
 
@@ -20,6 +20,8 @@ $result=$dao->selectAdmins();
                 <th>Id Number</th>
                 <th>Phone Number</th>
                 <th>Username</th>
+                <th>Email</th>
+                <th>Department</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -37,6 +39,8 @@ $result=$dao->selectAdmins();
                 <td>'.$row['idnumber'].'</td>
                 <td>'.$row['phonenumber'].'</td>
                 <td>'.$row['username'].'</td>
+                <td>'.$row['email'].'</td>
+                <td>'.$row['department'].'</td>
 
                 <td >
 					'
@@ -44,7 +48,7 @@ $result=$dao->selectAdmins();
                     <div class="visible-md visible-lg hidden-sm hidden-xs">
                         <a href="edit-doctor.php?id=<?php echo $row['idnumber'];?>" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
 
-                        <a href="admin.php?idnumber=<?php echo $row['idnumber'];?>&delAdmin=delete" onClick="return confirm(\'Are you sure you want to delete?\')"class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="Remove"><i class="fa fa-times fa fa-white"></i></a>
+                        <a href="admin.php?idnumber=<?php echo $row['idnumber'];?>&delSup=delete" onClick="return confirm(\'Are you sure you want to delete?\')"class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="Remove"><i class="fa fa-times fa fa-white"></i></a>
                     </div>
                     <div class="visible-xs visible-sm hidden-md hidden-lg">
                         <div class="btn-group" dropdown is-open="status.isopen">
