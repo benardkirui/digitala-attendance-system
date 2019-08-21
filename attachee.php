@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -19,14 +20,79 @@
     <link rel="stylesheet" href="assets/css/themes/theme-1.css" id="skin_color" />
     <link rel="stylesheet" href="assets/css/notif.css">
   </head>
-  <body>
-    <div id="container" >
-      <div class="card bg-white" id="navigation">
+  <script src="assets/js/jquery.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(
+      function()
+      {
+        function getNow()
+        {
+          var currentdate = new Date();
+  var datetime = currentdate.getDate() + "-"
+          + (currentdate.getMonth()+1)  + "-"
+          + currentdate.getFullYear() + " "
+          + currentdate.getHours() + ":"
+          + currentdate.getMinutes() + ":"
+          + currentdate.getSeconds();
+          return datetime;
+        }
+        $("#report_in").click(
+          function()
+          {
+            var fullname= $("#fullname").val();
+            var idnumber= $("#idnumber").val();
+            var date=getNow();
 
-          <button type="button" name="button"id="navigation-button" class="btn ">Report In</button>
-          <button type="button" name="button"id="navigation-button" class="btn">Report out</button>
-          <button type="button" name="button"id="navigation-button" class="btn">Previous Week Report</button>
-          <button type="button" name="button"id="navigation-button" class="btn">Tasks Todo</button>
+            
+
+          }
+        );
+
+        $("#report_out").click(
+          function()
+          {
+            alert("you clicked report out");
+          }
+        );
+
+        $("#current_week").click(
+          function()
+          {
+            alert("you clicked current week ");
+          }
+        );
+
+        $("#previous_week").click(
+          function()
+          {
+            alert("you clicked previous_week ");
+          }
+        );
+
+        $("#tasks").click(
+          function()
+          {
+            alert("you clicked tasks ");
+          }
+        );
+      }
+    );
+  </script>
+  <body>
+
+    <!-- HIDDEN FIELDS  -->
+    <input type="hidden" id="fullname" value="<?= $_SESSION['fullname']?>">
+    <input type="hidden" id="idnumber" value="<?= $_SESSION['idnumber']?>">
+
+    <div id="container" >
+      <div class="card bg-white">
+          <div class="btn-group-vertical" id="button-container">
+             <button type="button" name="button" class="btn btn-primary navigation_button" id="report_in" >Report In</button>
+            <button type="button" name="button" class="btn btn-primary navigation_button " id="report_out" >Report out</button>
+            <button type="button" name="button" class="btn btn-primary navigation_button" id="previous_week" >Previous Week Report</button>
+            <button type="button" name="button" class="btn btn-primary navigation_button" id="current_week" >This Week</button>
+            <button type="button" name="button" class="btn btn-primary navigation_button" id="tasks" >Tasks</button>
+          </div>
 
       </div>
       <div class="card bg-white" id="body">
@@ -102,18 +168,18 @@
     width: 30%;
 
   }
-  #navigation-button{
+  .navigation_button{
     width:100%;
     height:180px;
     padding:30px;
     font-size: 25px;
     font-weight: bold;
-    background-color: rgb(43, 124, 211);
+    background-color: rgba(50, 71, 124,0.7);
     color: white;
 
   }
-  #navigation-button:hover{
-    background-color: white;
+  .navigation_button:hover{
+  background-color: rgba(50, 71, 124,1.0);
   color: rgb(43, 124, 211);
 
   }
