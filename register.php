@@ -5,11 +5,20 @@ if(isset($_POST['name']))
 {
     $dao->insertAttachee($_POST['name'],$_POST['email'],$_POST['start'],$_POST['specialization'],$_POST['gender'],$_POST['language'],$_POST['phonenumber'],$_POST['idnumber'],$_POST['subcounty'],$_POST['ward'],$_POST['institution'],$_POST['course']);
 }
-if(isset($_POST['fullname']))
+if(isset($_POST['supervisor']))
 {
 
     $dao->insertSupervisor($_POST['fullname'],$_POST['idnumber'],$_POST['department'],$_POST['phonenumber'],$_POST['email'],$_POST['username'],$_POST['password']);
 }
 
+if(isset($_POST['reportin']))
+{
+    $dao->insertReportIn($_POST['fullname'],$_POST['idnumber'],$_POST['timein']);
+}
+
+if(isset($_POST['ifexist']))
+{
+    $dao->checkIfAlreadyReported($_POST['idnumber'],$_POST['date']);
+}
 
 ?>

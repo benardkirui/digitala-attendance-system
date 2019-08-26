@@ -80,7 +80,8 @@ $("#submit").click(
         alert("Some fields cannot be empty");
       }
       else{
-        $.post("register.php",{fullname:fullname,idnumber:idnumber,department:department,phonenumber:phonenumber,email:email,username:username,password:password},function(data,status)
+        var supervisor='supervisor';
+        $.post("register.php",{supervisor:supervisor,fullname:fullname,idnumber:idnumber,department:department,phonenumber:phonenumber,email:email,username:username,password:password},function(data,status)
         {
 
 

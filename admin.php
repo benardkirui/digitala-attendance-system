@@ -44,6 +44,15 @@ if(isset($_GET['delSup']))
     }
 
 }
+
+if(isset($_POST['logout']))
+{
+    $dao->logout();
+    
+}
+{
+
+}
 ?>
 
 <!DOCTYPE html>
@@ -111,9 +120,17 @@ if(isset($_GET['delSup']))
   </head>
 <body >
 
-<center>  <h2>Admin Management</h2></center>
+<div class='text-center'> 
+<h2>Admin Management</h2>
+<div class="text-right" style="padding:10px;">  
+<form action="" method="post">
+<button type="submit" onClick="return confirm('Are you sure you want to Logout?')" name="logout" class="btn btn-danger btn-outline-dark">Logout</button>
+</form>
+ </div>
+</div>
+
 <hr>
-<div class="container-fluid container-fullw ">
+<div class="container-fluid ">
     <div class="row">
 
 

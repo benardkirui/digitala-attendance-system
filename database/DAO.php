@@ -22,6 +22,47 @@ class DAO{
     }
   }
 
+  //function to logout 
+  public function logout()
+  {
+    echo '
+    <script>
+    alert("Logged out");
+    </script>
+    ';
+    session_destroy();
+    header("Location:index.php");
+
+  }
+
+  //function to insert report in
+  public function insertReportIn($fullname,$idnumber,$reportin)
+  {
+    $sql="INSERT INTO reporting (fullname,idnumber,reportin) VALUES('$fullname','$idnumber','$reportin')";
+    $result=mysqli_query($this->conn,$sql);
+    if($result)
+    {
+      echo "yes";
+    }
+    else{
+      echo "no";
+    }
+  }
+
+  //function to check if the attachee already reported in
+  public function checkIfAlreadyReported($idnumber,$date)
+  {
+    $sql="SELECT * FROM reporting WHERE reportin LIKE '%$date%'";
+    $result=mysqli_query($this->conn,$sql);
+    if(mysqli_num_rows($result)>0)
+    {
+      echo 'yes';
+    }
+    else{
+      echo 'no';
+    }
+  }
+
   //function to insert into the users database
   public function insertNewUser($fullname,$username,$idnumber,$phonenumber,$isAdmin,$password)
   {
