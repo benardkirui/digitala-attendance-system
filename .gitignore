@@ -3,3 +3,4 @@ config/connect.php
 config/connect.php
 database/config.php
 database/config.php
+*.php
