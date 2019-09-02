@@ -22,7 +22,7 @@ class DAO{
     }
   }
 
-  //function to logout 
+  //function to logout
   public function logout()
   {
     echo '
@@ -62,7 +62,8 @@ class DAO{
       $result=mysqli_query($this->conn,$sql);
       $date=date('Y-m-d');
 
-      $sql2="SELECT * FROM done WHERE idnumber='$idnumber' AND date='$date'";//sql to select the job done
+      $sql2="SELECT * FROM done WHERE idnumber='$idnumber' AND date LIKE '%$date%'";//sql to select the job done
+    
       $row= mysqli_fetch_assoc($result);
       $result=mysqli_query($this->conn,$sql2);//selects the job done for the day
       $row2=mysqli_fetch_assoc($result);
@@ -77,7 +78,7 @@ class DAO{
       echo json_encode($data);
     }
     else{
-      echo "no";
+      echo $sql;
     }
   }
 
