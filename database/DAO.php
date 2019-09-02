@@ -22,7 +22,7 @@ class DAO{
     }
   }
 
-  //function to logout 
+  //function to logout
   public function logout()
   {
     echo '
@@ -39,13 +39,14 @@ class DAO{
   public function insertReportIn($fullname,$idnumber,$reportin)
   {
     $sql="INSERT INTO reporting (fullname,idnumber,reportin) VALUES('$fullname','$idnumber','$reportin')";
+
     $result=mysqli_query($this->conn,$sql);
     if($result)
     {
       echo "yes";
     }
     else{
-      echo "no";
+      echo $sql;
     }
   }
 
@@ -59,7 +60,7 @@ class DAO{
       echo 'yes';
     }
     else{
-      echo 'no';
+      echo $sql;
     }
   }
 
