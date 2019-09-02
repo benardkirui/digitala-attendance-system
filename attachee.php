@@ -24,7 +24,7 @@ if(isset($_POST['logout']))
     <link href="vendor/select2/select2.min.css" rel="stylesheet" media="screen">
     <link href="vendor/bootstrap-datepicker/bootstrap-datepicker3.standalone.min.css" rel="stylesheet" media="screen">
     <link href="vendor/bootstrap-timepicker/bootstrap-timepicker.min.css" rel="stylesheet" media="screen">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/attachee.css">
     <link rel="stylesheet" href="assets/css/plugins.css">
     <link rel="stylesheet" href="assets/css/themes/theme-1.css" id="skin_color" />
     <link rel="stylesheet" href="assets/css/notif.css">
@@ -35,24 +35,47 @@ if(isset($_POST['logout']))
         function()
         {
             var idnumber= $("#idnumber").val();
+            var fullname= $("#fullname").val();
             function check_if_already_reportedin()
             {
                 var action='ifexist';
+                var report ='reportin';
                 var currentdate = new Date();
                 var datetime = currentdate.getDate() + "-" + (currentdate.getMonth()+1)  + "-" + currentdate.getFullYear();
-                $.post('register.php',{ifexist:action,idnumber:idnumber,date:datetime},
-                function(data,status)
-                {
-                    if(data=='yes')
+
+                $.post('register.php',{ifexist:action,report:report,idnumber:idnumber,date:datetime},
+                    function(data,status)
                     {
-                      $("#report_in").attr("disabled","disabled");
+                        if(data == 'yes')
+                        {
+                            $("#report_in").attr('disabled','disabled');
+                        }
                     }
-                }
+                );
+            }
+
+
+            function check_if_already_reported_out()
+            {
+                var action='ifexist';
+                var report ='reportout';
+                var currentdate = new Date();
+                var datetime = currentdate.getDate() + "-" + (currentdate.getMonth()+1)  + "-" + currentdate.getFullYear();
+
+                $.post('register.php',{ifexist:action,report:report,idnumber:idnumber,date:datetime},
+                    function(data,status)
+                    {
+                        if(data == 'yes')
+                        {
+                            $("#report_out").attr('disabled','disabled');
+                        }
+                    }
                 );
             }
 
             check_if_already_reportedin();
-            
+            check_if_already_reported_out();
+
             $("#report-body").hide(1);
             function getNow()
             {
@@ -69,7 +92,6 @@ if(isset($_POST['logout']))
                 function()
                 {
                     $("#report_in").attr("disabled","disabled");
-                    var fullname= $("#fullname").val();
                     var date=getNow();
                     var action='reportin';
 
@@ -101,7 +123,88 @@ if(isset($_POST['logout']))
             $("#report_out").click(
                 function()
                 {
-                    alert("you clicked report out");
+                    //pop up a modal to state what the user has done for the day
+                    $("#reportOutModal").slideDown(1000);
+
+                }
+            );
+
+            $("#submit_job").click(
+                function()
+                {
+                    //get the jobs done from the text area
+
+                    $("#reportOutModal").slideUp(1);
+                    var jobs_done= $('#job_area').val();
+                    //if the job is null ask the user to explain why he didnt do anything today
+                    if(jobs_done=='')
+                    {
+                        $("#reportOutModal").slideDown(1000);
+                        $("#modal-title").html("You did nothing?");
+                        $("#job_area").attr("placeholder","Explain why you did nothing or state the job you did today");
+                    }
+                    else if(jobs_done.length<10)
+                    {
+                        $("#reportOutModal").slideDown(1000);
+                        var elem= '<p class="lead alert-danger">Hint: At least 10 characters</p>';
+                        $("#job_area").append(elem);
+                        $("#modal-title").html("Give More Description ").append(elem);
+                    }
+                    else {
+                        var action='done';
+                        //the user did something so save the job done by the user
+                        $.post('register.php',{done:action,fullname:fullname,idnumber:idnumber,job_done:jobs_done},
+                            function(data,status)
+                            {
+                                if(data=='yes')
+                                {
+
+                                    //the users work has been saved succesfully
+                                    //now update the report out time in his reports
+                                    var action='reportout';
+                                    var timeout = getNow();
+                                    var currentdate = new Date();
+                                    var datetime = currentdate.getDate() + "-" + (currentdate.getMonth()+1)  + "-" + currentdate.getFullYear();//24-8-2019
+                                    $.post('register.php',{reportout:action,idnumber:idnumber,fullname:fullname,timeout:timeout,date:datetime},
+                                        function(data,status)
+                                        {
+                                            if(data == 'no')
+                                            {
+                                                alert("There was an error reporting in");
+                                            }
+                                            else {
+
+                                                $("#reportOutModal").hide(5);
+                                                $("#initial-body").slideUp(1000);
+                                                $("#title").html("Report Out succesful");
+                                                $("#name-display").text("Full Name: "+data.fullname);
+                                                $("#idnumber-display").text("Id Number: "+data.idnumber);
+                                                $("#timein-display").text("Time In: "+data.reportin);
+                                                $("#timeout-display").text("Time Out: "+data.reportout);
+                                                $("#comment-display").text("Job Done: "+data.jobdone);
+                                                $("#report-body").slideDown(1000);
+                                                $(this).text("Saved dont click again");
+                                            }
+                                        },"json"
+                                    );
+
+
+                                }
+                                else{
+                                    alert("There was a problem saving Job");
+                                }
+                            }
+                        );
+                    }
+                }
+
+
+            );
+
+            $(".closeModal").click(
+                function()
+                {
+                    $("#reportOutModal").slideUp(1000);
                 }
             );
 
@@ -215,46 +318,30 @@ if(isset($_POST['logout']))
 </div>
 
 
+<!--THE REPORTING OUT MODAL-->
+<div class="modal" id="reportOutModal">
+    <div class="modal-dialog">
+        <div class="modal-content bg-secondary">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-title">What have you done Today?</h4>
+                <button type="button" class="close closeModal">X</button>
 
+            </div>
+            <div class="modal-body">
+                <div class="card-body" id="job_container">
+                    <div class="form-group">
+                        <textarea id="job_area" class="form-group-lg " placeholder="State What you did today" style="width:100%;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="submit_job" class="btn btn-success ">Submit</button>
+                <button type="button" class="btn btn-danger closeModal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
-<style media="screen">
-    .card{
 
-    }
-    #container
-    {
-        background-color: grey;
-        margin-top: 30px;
-        display: flex;
-        flex-flow: wrap;
-        justify-content: space-around;
-    }
-    #navigation{
-        width: 19%;
-    }
-    #body{
-
-        width: 50%;
-    }
-    #display{
-        width: 30%;
-
-    }
-    .navigation_button{
-        width:100%;
-        height:100px;
-        padding:30px;
-        font-size: 20px;
-        background-color: rgba(50, 71, 124,0.7);
-        color: white;
-
-    }
-    .navigation_button:hover{
-        background-color: rgba(50, 71, 124,1.0);
-        color: rgb(43, 124, 211);
-
-    }
-
-</style>
 </html>

@@ -16,9 +16,30 @@ if(isset($_POST['reportin']))
     $dao->insertReportIn($_POST['fullname'],$_POST['idnumber'],$_POST['timein']);
 }
 
+if(isset($_POST['reportout']))
+{
+    $dao->insertReportOut($_POST['idnumber'],$_POST['timeout'],$_POST['date']);
+}
+
 if(isset($_POST['ifexist']))
 {
-    $dao->checkIfAlreadyReported($_POST['idnumber'],$_POST['date']);
+
+    //check the report type
+    $report = $_POST['report'];
+    if($report=='reportin')
+    {
+        $dao->checkIfAlreadyReportedIn($_POST['idnumber'],$_POST['date']);
+
+    }
+    else{
+        $dao->checkIfAlreadyReportedOut($_POST['idnumber'],$_POST['date']);
+    }
+}
+
+if(isset($_POST['done']))
+{
+    $date = date('Y-m-d H:i:s');
+    $dao->insertAttacheeJob($_POST['idnumber'],$_POST['fullname'],$_POST['job_done'],$date);
 }
 
 ?>

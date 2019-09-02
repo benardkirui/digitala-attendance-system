@@ -6,7 +6,7 @@ class Config{
   {
     $host="localhost";
       $username="root";
-      $password="";
+      $password="kiptoo";
       $dbname="attendance";
       $port=3306;
       $con=mysqli_connect($host,$username,$password,$dbname,$port);

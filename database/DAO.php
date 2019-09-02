@@ -22,7 +22,7 @@ class DAO{
     }
   }
 
-  //function to logout
+  //function to logout 
   public function logout()
   {
     echo '
@@ -39,28 +39,72 @@ class DAO{
   public function insertReportIn($fullname,$idnumber,$reportin)
   {
     $sql="INSERT INTO reporting (fullname,idnumber,reportin) VALUES('$fullname','$idnumber','$reportin')";
-
     $result=mysqli_query($this->conn,$sql);
     if($result)
     {
       echo "yes";
     }
     else{
-      echo $sql;
+      echo "no";
+    }
+  }
+
+  //function to insert report out
+  public function insertReportOut($idnumber,$reportout,$date)
+  {
+//    $date = date('d-m-Y');//24-8-2019
+
+    $sql = "UPDATE reporting SET reportout='$reportout' WHERE idnumber='$idnumber' AND reportin LIKE '%$date%'";
+    $result=mysqli_query($this->conn,$sql);
+    if($result)
+    {
+      $sql="SELECT * FROM reporting WHERE idnumber='$idnumber' AND reportout='$reportout'";// sql to select reporting details
+      $result=mysqli_query($this->conn,$sql);
+      $date=date('Y-m-d');
+
+      $sql2="SELECT * FROM done WHERE idnumber='$idnumber' AND date='$date'";//sql to select the job done
+      $row= mysqli_fetch_assoc($result);
+      $result=mysqli_query($this->conn,$sql2);//selects the job done for the day
+      $row2=mysqli_fetch_assoc($result);
+      $data= array(
+          'fullname'=>$row['fullname'],
+        'idnumber'=>$row['idnumber'],
+        'reportin'=>$row['reportin'],
+        'reportout'=>$row['reportout'],
+        'jobdone'=>$row2['jobdone']
+      );
+
+      echo json_encode($data);
+    }
+    else{
+      echo "no";
     }
   }
 
   //function to check if the attachee already reported in
-  public function checkIfAlreadyReported($idnumber,$date)
+  public function checkIfAlreadyReportedIn($idnumber,$date)
   {
-    $sql="SELECT * FROM reporting WHERE reportin LIKE '%$date%'";
+    $sql="SELECT * FROM reporting WHERE idnumber='$idnumber' AND reportin LIKE '%$date%'";
     $result=mysqli_query($this->conn,$sql);
     if(mysqli_num_rows($result)>0)
     {
       echo 'yes';
     }
     else{
-      echo $sql;
+      echo 'no';
+    }
+  }
+
+  public function checkIfAlreadyReportedOut($idnumber,$date)
+  {
+    $sql="SELECT * FROM reporting WHERE idnumber='$idnumber' AND reportout LIKE '%$date%'";
+    $result=mysqli_query($this->conn,$sql);
+    if(mysqli_num_rows($result)>0)
+    {
+      echo 'yes';
+    }
+    else{
+      echo 'no';
     }
   }
 
@@ -310,6 +354,21 @@ class DAO{
     $result=mysqli_query($this->conn,$sql);
 
     return $result;
+  }
+
+
+  // a function to insert a job done by attachee
+  public function insertAttacheeJob($idnumber,$fullname,$job_done,$date)
+  {
+    $sql= "INSERT INTO done VALUES('$idnumber','$fullname','$job_done','$date')";
+    $result=mysqli_query($this->conn,$sql);
+    if($result)
+    {
+      echo 'yes';
+    }
+    else{
+      echo $sql;
+    }
   }
 }
 
