@@ -1,5 +1,4 @@
 <div class="card">
-<form  action="" method="post">
   <div class="card-header">
     <h1>Add Supervisor</h1>
   </div>
@@ -43,7 +42,7 @@
   <div class="card-footer">
     <button type="button" id="submit"  class="btn btn-success btn-lg btn-block">Submit</button>
   </div>
-</form>
+
 </div>
 <style media="screen">
   #card{
@@ -51,9 +50,12 @@
     flex-flow: wrap;
     justify-content: space-between;
   }
-  #container1,#container2{
+  .form-group,.form-control{
+     width:90%;
+  }
+  #body1,#body2{
     height: auto;
-    width: 300px;
+    width:50%;
   }
   .card-header,.card-footer
   {
@@ -61,6 +63,16 @@
     color: white;
   }
 </style>
+<!--        //THE MODAL-->
+<div class="modal" id="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Bomet County Government</h4>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
 
 $("#submit").click(
@@ -77,7 +89,7 @@ $("#submit").click(
       var email=$("#email").val();
       if(fullname=='' || idnumber=='' || department=='' || username=='' || email=='' || phonenumber=='' || password=='' )
       {
-        alert("Some fields cannot be empty");
+        showError("You cannot leave some fields empty");
       }
       else{
         var supervisor='supervisor';
@@ -87,17 +99,50 @@ $("#submit").click(
 
           if(data=='success')
           {
-          $("#container").slideToggle(1000);
-          $("#container").load('supervisors_table.php');
-          $("#container").slideToggle(1000);
+              window.location.assign("supervisors_table.php");
           }
           else{
-            $("h1").html(data);
-            alert("insert failed");
+           showError("Failed to insert supervisor");
           }
         });
       }
 
+    }
+);
+
+$("#idnumber").focusout(
+    function()
+    {
+        var idnumber = $(this).val();
+        $.post("register.php",{checkid:"checkid",idnumber:idnumber},
+            function(data,status)
+            {
+                if(data == "yes")
+                {
+                    showError("Idnumber already exists");
+                    $("#idnumber").val('');
+                }
+
+            }
+        );
+    }
+);
+
+$("#username").focusout(
+    function()
+    {
+        var username = $(this).val();
+        $.post("register.php",{checkusername:"checkusername",username:username},
+            function(data,status)
+            {
+                if(data == "yes")
+                {
+                    showError("Username already exists");
+                    $("#username").val('');
+                }
+
+            }
+        );
     }
 );
 </script>

@@ -1,4 +1,5 @@
 <?php
+session_start();
 include "database/DAO.php";
 $dao= new DAO();
 if(isset($_POST['name']))
@@ -40,6 +41,27 @@ if(isset($_POST['done']))
 {
     $date = date('Y-m-d H:i:s');
     $dao->insertAttacheeJob($_POST['idnumber'],$_POST['fullname'],$_POST['job_done'],$date);
+}
+
+if(isset($_POST['report_weekly']))
+{
+    $dao->insert_weekly_report($_POST['work_done'],$_POST['challenges'],$_POST['solutions'],$_POST['engagement'],$_POST['plan'],$_POST['date'],$_SESSION['idnumber']);
+}
+
+if(isset($_POST['checkid']))
+{
+    $dao->check_supervisor($_POST['idnumber']);
+}
+if(isset($_POST['checkusername']))
+{
+    $dao->check_supervisor_username($_POST['username']);
+}
+if(isset($_POST['assignSup']))
+{
+    $supervisor=$_POST['sup'];
+    $array= explode('-',$supervisor);
+    $sup_id = $array[count($array)-1];
+    $dao->assign_supervisor($_POST['attachee'],$sup_id);
 }
 
 ?>

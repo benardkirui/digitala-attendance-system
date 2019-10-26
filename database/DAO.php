@@ -31,9 +31,33 @@ class DAO{
     </script>
     ';
     session_destroy();
+    header("Location:view_attendance.php");
+
+  }
+  //function to logout
+  public function logout_attachee()
+  {
+    echo '
+    <script>
+    alert("Logged out");
+    </script>
+    ';
+    session_destroy();
     header("Location:index.php");
 
   }
+    //function to logout
+    public function logout_supervisor()
+    {
+        echo '
+    <script>
+    alert("Logged out");
+    </script>
+    ';
+        session_destroy();
+        header("Location:../view_attendance.php");
+
+    }
 
   //function to insert report in
   public function insertReportIn($fullname,$idnumber,$reportin)
@@ -96,6 +120,8 @@ class DAO{
     }
   }
 
+
+
   public function checkIfAlreadyReportedOut($idnumber,$date)
   {
     $sql="SELECT * FROM reporting WHERE idnumber='$idnumber' AND reportout LIKE '%$date%'";
@@ -149,6 +175,7 @@ class DAO{
   public function checkAttacheeLogin($username,$password)
   {
     $sql="SELECT * FROM users WHERE username='$username' AND password='$password'";
+
     $result=mysqli_query($this->conn,$sql);
     if(mysqli_num_rows($result)>0)
     {
@@ -167,7 +194,7 @@ class DAO{
         if($this->checkRegistered($result['idnumber']))
         {
           //the user has already registered take them to their page
-          Header("Location:attachee.php?Login succesful");
+          Header("Location:panels.php?Login succesful");
         }
         else{
           //the user has not registered take him to the register page
@@ -202,10 +229,38 @@ class DAO{
 
     }
     else{
+
+      $this->check_supervisor_login($username,$password);
+
       $_SESSION['error']='Sorry your details are not present';
     }
   }
 
+  //function to get the name of the supervisor
+  public function get_supervisor_name($idnumber)
+  {
+    $sql ="SELECT * FROM supervisors WHERE idnumber=$idnumber";
+    $result = mysqli_query($this->conn,$sql);
+    $row = mysqli_fetch_assoc($result);
+    return $row['fullname'];
+  }
+
+  //function to check supervisor login
+  public function check_supervisor_login($username,$password)
+  {
+    $sql = "SELECT * FROM supervisors WHERE username='$username' AND password='$password'";
+    $result = mysqli_query($this->conn, $sql);
+    if (mysqli_num_rows($result) > 0)
+    {
+      //not return anything coz it will switch to another page
+      $row = mysqli_fetch_assoc($result);
+      $_SESSION['idnumber']=$row['idnumber'];
+      Header("Location:supervisor/supervisor.php");
+    }
+    else{
+      return false;
+    }
+  }
   //check if the attachee has fully registered
   public function checkRegistered($idnumber)
   {
@@ -303,6 +358,34 @@ class DAO{
 
   }
 
+  //function to check if supervisor id already exist
+  public function check_supervisor($id)
+  {
+    $sql = "SELECT * FROM supervisors WHERE idnumber=$id";
+    $result = mysqli_query($this->conn,$sql);
+    if(mysqli_num_rows($result)>0)
+    {
+      echo "yes";
+    }
+    else{
+      echo 'no';
+    }
+  }
+
+  //function to check if the username already exist
+  public function check_supervisor_username($username)
+  {
+    $sql = "SELECT * FROM supervisors WHERE username='$username'";
+    $result = mysqli_query($this->conn,$sql);
+    if(mysqli_num_rows($result)>0)
+    {
+      echo "yes";
+    }
+    else{
+      echo 'no';
+    }
+  }
+
   public function deleteAdmin($idnumber)
   {
     $sql2= "DELETE FROM users WHERE idnumber='$idnumber'";
@@ -351,7 +434,7 @@ class DAO{
 
   public function selectSupervisors()
   {
-    $sql="SELECT * FROM `supervisors`";
+    $sql="SELECT * FROM supervisors";
     $result=mysqli_query($this->conn,$sql);
 
     return $result;
@@ -361,7 +444,7 @@ class DAO{
   // a function to insert a job done by attachee
   public function insertAttacheeJob($idnumber,$fullname,$job_done,$date)
   {
-    $sql= "INSERT INTO done VALUES('$idnumber','$fullname','$job_done','$date')";
+    $sql= "INSERT INTO done (idnumber,fullname,jobdone,date) VALUES('$idnumber','$fullname','$job_done','$date')";
     $result=mysqli_query($this->conn,$sql);
     if($result)
     {
@@ -370,6 +453,205 @@ class DAO{
     else{
       echo $sql;
     }
+  }
+
+
+  //FUNCTION TO SELECT THE JOBS DONE
+    public function select_jobs_done($id)
+    {
+        $sql = "SELECT * FROM done WHERE idnumber=$id ORDER BY id DESC ";
+        $result=mysqli_query($this->conn,$sql);
+        return $result;
+    }
+
+    //function to select the attendance
+    public function select_attendance($id)
+    {
+        $sql = "SELECT * FROM reporting ORDER BY id DESC";
+        $result=mysqli_query($this->conn,$sql);
+        return $result;
+    }
+
+    //function ot inset the weekly report
+  public function insert_weekly_report($work_done,$challenges,$solutions,$engagement,$plan,$week_ending,$attachee_id)
+  {
+    $sql = "INSERT INTO weekly ( work_done, challenges, solutions, engagement, plan, week_ending, attachee_id)
+    VALUES('$work_done','$challenges','$solutions','$engagement','$plan','$week_ending',$attachee_id)
+";
+    $result=mysqli_query($this->conn,$sql);
+    if($result)
+    {
+      echo "yes";
+    }
+    else{
+      echo "no";
+    }
+  }
+
+  //function to select attachee weekly report
+  public function select_attachee_weekly_report($id)
+  {
+    $sql = "SELECT * FROM weekly WHERE attachee_id=$id";
+    $result=mysqli_query($this->conn,$sql);
+    return $result;
+
+  }
+
+  //function to select all the attendance
+  public function select_all_attendance()
+  {
+    $sql = "SELECT * FROM reporting ORDER BY reportout DESC ";
+    $result=mysqli_query($this->conn,$sql);
+    return $result;
+  }
+
+  //function to assign a supervisor
+  public function assign_supervisor($attachee,$supervisor)
+  {
+    $sql ="UPDATE attachees SET supervisor=$supervisor WHERE idnumber=$attachee";
+    $result=mysqli_query($this->conn,$sql);
+    if($result)
+    {
+      echo 'yes';
+    }
+    else{
+      echo 'no';
+    }
+  }
+
+  //function to select the supervisor attachees
+  public function select_supervisor_attachees($idnumber)
+  {
+    $sql ="SELECT * FROM attachees WHERE supervisor=$idnumber";
+    $result=mysqli_query($this->conn,$sql);
+    return $result;
+  }
+
+  //function to assign task
+  public function asssign_task($assigned_to,$assigned_by,$date,$description)
+  {
+    $sql = "INSERT INTO task (assigned_to,assigned_by,date,description)
+VALUES($assigned_to,$assigned_by,'$date','$description')
+";
+    $result=mysqli_query($this->conn,$sql);
+    if($result)
+    {
+      echo 'yes';
+    }
+    else{
+      echo 'no';
+    }
+  }
+
+    //function to select daily reports for a supervisors attachees
+    public function select_attachee_supervisor_daily_reports($sup_id)
+    {
+        $sql = "SELECT d.* ,att.phone,att.supervisor  FROM done d,attachees att WHERE att.supervisor=$sup_id AND d.idnumber=att.idnumber ORDER BY d.date DESC";
+        $result=mysqli_query($this->conn,$sql);
+//        echo $sql;
+        return $result;
+
+    }
+
+    //function to select weekly reports for a supervisors attachees
+    public function select_attachee_supervisor_weekly_reports($sup_id)
+    {
+        $sql = "SELECT w.* ,att.phone,att.name  FROM weekly w,attachees att WHERE att.supervisor=$sup_id AND w.attachee_id=att.idnumber ORDER BY w.week_ending DESC";
+        $result=mysqli_query($this->conn,$sql);
+//        echo $sql;
+        return $result;
+
+    }
+
+    //function to get the existing comments
+    public function get_existing_comments($id)
+    {
+        $sql = "SELECT comments FROM weekly WHERE id=$id";
+        $result = mysqli_query($this->conn,$sql);
+        return $result;
+    }
+
+    //function to make comments
+    public function make_comments($id,$comments)
+    {
+        $sql = "UPDATE weekly SET comments='$comments' WHERE id=$id";
+        $result=mysqli_query($this->conn,$sql);
+        if($result)
+        {
+            echo 'yes';
+        }
+        else{
+            echo 'no';
+        }
+    }
+
+    //function to select the supervisors details
+    public function select_supervisor_details($id)
+    {
+        $sql = "SELECT * FROM supervisors WHERE idnumber=$id";
+        $result = mysqli_query($this->conn,$sql);
+        return $result;
+    }
+
+    //function to check old supervisor password
+    public function check_supervisor_old_pass($sup_id,$password)
+    {
+        $sql= "SELECT * FROM supervisors WHERE idnumber=$sup_id AND password='$password'";
+        $result = mysqli_query($this->conn,$sql);
+        if(mysqli_num_rows($result)>0)
+        {
+            echo "yes";
+        }
+        else{
+            echo "no";
+        }
+    }
+    //function ot change the supervisor password
+    public function change_supervisor_password($sup_id,$password)
+    {
+        $sql= "UPDATE supervisors SET password='$password' WHERE idnumber=$sup_id";
+        $result = mysqli_query($this->conn,$sql);
+        if($result)
+        {
+            echo "yes";
+        }
+        else{
+            echo "no";
+        }
+    }
+
+    //function to select the filtered attendance dates
+  public function select_filtered_attendance($from,$to)
+  {
+    $sql = "SELECT * FROM reporting WHERE reportout>='$from' AND reportout<='$to'";
+    echo $sql;
+  }
+
+
+    //function to update the supervisor
+    public function update_supervisor($idnumber,$fullname,$department,$phonenumber,$email,$username)
+    {
+        $sql ="
+            UPDATE supervisors SET
+            idnumber=$idnumber,fullname='$fullname',department='$department',phonenumber='$phonenumber',
+            email='$email',username='$username' WHERE idnumber=$idnumber
+        ";
+        $result = mysqli_query($this->conn,$sql);
+        if($result)
+        {
+            echo "yes";
+        }
+        else{
+            echo "no";
+        }
+    }
+
+    //function to select the tasks assigned to the attachee
+  public function select_attachee_tasks($id)
+  {
+    $sql = "SELECT t.*, sup.fullname FROM task t , supervisors sup WHERE t.assigned_to=$id AND sup.idnumber=t.assigned_by ORDER BY t.id DESC";
+    $result = mysqli_query($this->conn,$sql);
+    return $result;
   }
 }
 

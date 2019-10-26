@@ -1,347 +1,206 @@
-<?php session_start();
+
+<?php
+session_start();
 include 'database/DAO.php';
+$dbc = new DAO();
+$id = $_SESSION['idnumber'];
 
-$dao= new DAO();
-
-if(isset($_POST['logout']))
-{
-    $dao->logout();
-}
 ?>
+
+
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <title></title>
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="vendor/fontawesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="vendor/themify-icons/themify-icons.min.css">
-    <link href="vendor/animate.css/animate.min.css" rel="stylesheet" media="screen">
-    <link href="vendor/perfect-scrollbar/perfect-scrollbar.min.css" rel="stylesheet" media="screen">
-    <link href="vendor/switchery/switchery.min.css" rel="stylesheet" media="screen">
-    <link href="vendor/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" media="screen">
-    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="screen">
-    <link href="vendor/bootstrap-datepicker/bootstrap-datepicker3.standalone.min.css" rel="stylesheet" media="screen">
-    <link href="vendor/bootstrap-timepicker/bootstrap-timepicker.min.css" rel="stylesheet" media="screen">
-    <link rel="stylesheet" href="assets/css/attachee.css">
-    <link rel="stylesheet" href="assets/css/plugins.css">
-    <link rel="stylesheet" href="assets/css/themes/theme-1.css" id="skin_color" />
-    <link rel="stylesheet" href="assets/css/notif.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+
+    <!-- Start Global Mandatory Style
+    =====================================================================-->
+    <link href="assets/dist/css/base.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Theme style -->
+    <link href="assets/dist/css/component_ui.min.css" rel="stylesheet" type="text/css">
+    <!-- Theme style rtl -->
+    <link href="assets/dist/css/component_ui_rtl.css" rel="stylesheet" type="text/css">
+    <!-- Custom css -->
+    <link href="assets/dist/css/custom.css" rel="stylesheet" type="text/css">
+    <link href="assets/plugins/modals/modal-component.css" rel="stylesheet" type="text/css">
+    <!-- End Theme Layout Style
+    =====================================================================-->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/verifier.js"></script>
+    <script>
+        $(document).ready(
+            function()
+            {
+               $("#save").click(
+                   function()
+                   {
+                       var date= $("#date").val();
+                       var work_done= $("#work_done").val();
+                       var challenges = $("#challenges").val();
+                       var solutions = $("#solutions").val();
+                       var engagement = $("#engagement").val();
+                       var plan = $("#plan").val();
+
+                       if(date =='' || work_done =='' || challenges=='' || solutions =='' || engagement =='' || plan == '')
+                       {
+                           showError("You cannot leave the fields empty");
+                       }
+                       else{
+                           if(check_min_length(work_done,"Work Done",100))
+                           {
+
+                               $.post("register.php",{report_weekly:"report_weekly",date:date,work_done:work_done,challenges:challenges,solutions:solutions,engagement:engagement,plan:plan},
+                                   function(data,status)
+                                   {
+                                       if(data=='yes')
+                                       {
+                                           $("#tohide").slideUp(1000);
+                                           showSuccess("Weekly report saved");
+                                           $('#save').hide();
+                                       }
+                                       else{
+                                           showError('Failed to save Weekly report');
+                                           $("#tohide").slideUp(100);
+                                           $("#tohide").slideDown(1000);
+                                       }
+                                   }
+                               );
+                           }
+                       }
+                   }
+               );
+            }
+
+        );
+    </script>
 </head>
-<script src="assets/js/jquery.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(
-        function()
-        {
-            var idnumber= $("#idnumber").val();
-            var fullname= $("#fullname").val();
-            function check_if_already_reportedin()
-            {
-                var action='ifexist';
-                var report ='reportin';
-                var currentdate = new Date();
-                var datetime = currentdate.getDate() + "-" + (currentdate.getMonth()+1)  + "-" + currentdate.getFullYear();
+<style>
+    .md-modal{
 
-                $.post('register.php',{ifexist:action,report:report,idnumber:idnumber,date:datetime},
-                    function(data,status)
-                    {
-                        if(data == 'yes')
-                        {
-                            $("#report_in").attr('disabled','disabled');
-                        }
-                    }
-                );
-            }
-
-
-            function check_if_already_reported_out()
-            {
-                var action='ifexist';
-                var report ='reportout';
-                var currentdate = new Date();
-                var datetime = currentdate.getDate() + "-" + (currentdate.getMonth()+1)  + "-" + currentdate.getFullYear();
-
-                $.post('register.php',{ifexist:action,report:report,idnumber:idnumber,date:datetime},
-                    function(data,status)
-                    {
-                        if(data == 'yes')
-                        {
-                            $("#report_out").attr('disabled','disabled');
-                        }
-                    }
-                );
-            }
-
-            check_if_already_reportedin();
-            check_if_already_reported_out();
-
-            $("#report-body").hide(1);
-            function getNow()
-            {
-                var currentdate = new Date();
-                var datetime = currentdate.getDate() + "-"
-                    + (currentdate.getMonth()+1)  + "-"
-                    + currentdate.getFullYear() + " "
-                    + currentdate.getHours() + ":"
-                    + currentdate.getMinutes() + ":"
-                    + currentdate.getSeconds();
-                return datetime;
-            }
-            $("#report_in").click(
-                function()
-                {
-                    $("#report_in").attr("disabled","disabled");
-                    var date=getNow();
-                    var action='reportin';
-
-                    //saving the report in to the database
-                    $.post('register.php',{reportin:action,fullname:fullname,idnumber:idnumber,timein:date},
-                        function(data,status)
-                        {
-                            if(data=='yes')
-                            {
-                                $("#initial-body").slideToggle(1000);
-                                $("#title").html("Report In succesful");
-                                $("#name-display").text("Full Name: "+fullname);
-                                $("#idnumber-display").text("Id Number: "+idnumber);
-                                $("#timein-display").text("Time In: "+date);
-                                $("#comment-display").text("Comment: Always come early");
-                                $("#report-body").slideToggle(1000);
-                                $(this).text("Saved dont click again");
-                            }
-                            else{
-                                alert("There was a problem reporting in");
-                            }
-                        }
-                    );
-
-
-                }
-            );
-
-            $("#report_out").click(
-                function()
-                {
-                    //pop up a modal to state what the user has done for the day
-                    $("#reportOutModal").slideDown(1000);
-
-                }
-            );
-
-            $("#submit_job").click(
-                function()
-                {
-                    //get the jobs done from the text area
-
-                    $("#reportOutModal").slideUp(1);
-                    var jobs_done= $('#job_area').val();
-                    //if the job is null ask the user to explain why he didnt do anything today
-                    if(jobs_done=='')
-                    {
-                        $("#reportOutModal").slideDown(1000);
-                        $("#modal-title").html("You did nothing?");
-                        $("#job_area").attr("placeholder","Explain why you did nothing or state the job you did today");
-                    }
-                    else if(jobs_done.length<10)
-                    {
-                        $("#reportOutModal").slideDown(1000);
-                        var elem= '<p class="lead alert-danger">Hint: At least 10 characters</p>';
-                        $("#job_area").append(elem);
-                        $("#modal-title").html("Give More Description ").append(elem);
-                    }
-                    else {
-                        var action='done';
-                        //the user did something so save the job done by the user
-                        $.post('register.php',{done:action,fullname:fullname,idnumber:idnumber,job_done:jobs_done},
-                            function(data,status)
-                            {
-                                if(data=='yes')
-                                {
-
-                                    //the users work has been saved succesfully
-                                    //now update the report out time in his reports
-                                    var action='reportout';
-                                    var timeout = getNow();
-                                    var currentdate = new Date();
-                                    var datetime = currentdate.getDate() + "-" + (currentdate.getMonth()+1)  + "-" + currentdate.getFullYear();//24-8-2019
-                                    $.post('register.php',{reportout:action,idnumber:idnumber,fullname:fullname,timeout:timeout,date:datetime},
-                                        function(data,status)
-                                        {
-                                            if(data == 'no')
-                                            {
-                                                alert("There was an error reporting in");
-                                            }
-                                            else {
-
-                                                $("#reportOutModal").hide(5);
-                                                $("#initial-body").slideUp(1000);
-                                                $("#title").html("Report Out succesful");
-                                                $("#name-display").text("Full Name: "+data.fullname);
-                                                $("#idnumber-display").text("Id Number: "+data.idnumber);
-                                                $("#timein-display").text("Time In: "+data.reportin);
-                                                $("#timeout-display").text("Time Out: "+data.reportout);
-                                                $("#comment-display").text("Job Done: "+data.jobdone);
-                                                $("#report-body").slideDown(1000);
-                                                $(this).text("Saved dont click again");
-                                            }
-                                        },"json"
-                                    );
-
-
-                                }
-                                else{
-                                    alert("There was a problem saving Job");
-                                }
-                            }
-                        );
-                    }
-                }
-
-
-            );
-
-            $(".closeModal").click(
-                function()
-                {
-                    $("#reportOutModal").slideUp(1000);
-                }
-            );
-
-            $("#current_week").click(
-                function()
-                {
-                    alert("you clicked current week ");
-                }
-            );
-
-            $("#previous_week").click(
-                function()
-                {
-                    alert("you clicked previous_week ");
-                }
-            );
-
-            $("#tasks").click(
-                function()
-                {
-                    alert("you clicked tasks ");
-                }
-            );
-
-        }
-    );
-</script>
+        overflow-y: scroll;
+    }
+</style>
 <body>
+<div class="wrapper animsition">
 
-<!-- HIDDEN FIELDS  -->
-<input type="hidden" id="fullname" value="<?= $_SESSION['fullname']?>">
-<input type="hidden" id="idnumber" value="<?= $_SESSION['idnumber']?>">
-
-<div id="container" class="container col-md-12">
-    <div class="card col-md-3 bg-white">
-        <div class="btn-group-vertical" id="button-container">
-            <button type="button" name="button" class="btn btn-primary navigation_button" id="report_in" >Report In</button>
-            <button type="button" name="button" class="btn btn-primary navigation_button " id="report_out" >Report out</button>
-            <button type="button" name="button" class="btn btn-primary navigation_button" id="previous_week" >Previous Week Report</button>
-            <button type="button" name="button" class="btn btn-primary navigation_button" id="current_week" >This Week</button>
-            <button type="button" name="button" class="btn btn-primary navigation_button" id="tasks" >Tasks</button>
-            <form method="post">
-                <button type="submit" onClick="return confirm('Are you sure you want to Logout?')" class="btn btn-primary navigation_button" name="logout" >Logout</button>
-            </form>
-        </div>
-
-    </div>
-    <div class="card col-md-6 bg-white" id="body">
-        <div class="card-header">
-            Attachee Report
-        </div>
-        <div class="card-body" >
-            <div class="form-group" id="initial-body">
-                <label for="">Monday</label>
-                <input type="text" name="" value="" class="form-control">
-                <br>
-                <label for="">Tuesday</label>
-                <input type="text" name="" value="" class="form-control">
-                <br>
-                <label for="">wednesday</label>
-                <input type="text" name="" value="" class="form-control">
-                <br>
-                <label for="">Thursday</label>
-                <input type="text" name="" value="" class="form-control">
-                <br>
-                <label for="">Friday</label>
-                <input type="text" name="" value="" class="form-control">
-                <br>
-            </div>
-
-
-            <!-- THE REPORT IN REPORT OUT PAGE -->
-            <div class="panel" id="report-body">
-                <div class="panel-header">
-                    <h3 class="text-center" id="title"></h3>
-                </div>
-                <div class="panel-body panel-success">
-                    <p class="lead" id="name-display">Name:</p>
-                    <p class="lead" id="idnumber-display">ID Number:</p>
-                    <p class="lead" id="timein-display">Time in:</p>
-                    <p class="lead" id="timeout-display">Time Out:</p>
-                    <p class="lead" id="comment-display">Comment:</p>
-                </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <button type="button" name="button" class="btn btn-success btn-outline-primary col-lg-12" >Submit</button>
-            <br><br>
-        </div>
-    </div>
-    <div class="card col-md-3 bg-white" id="display">
-        <div class="card-header">
-            <h2>Message from admin</h2>
-        </div>
-        <div class="card-body">
-            Admin Name:
-            <br>
-            Admin Message:
-
-        </div>
-        <hr>
-        <div class="card-header">
-            <h2>Message From Supervisor</h2>
-        </div>
-        <div class="card-body">
-            Supervisor's Name:
-            <br>
-            Message:
-        </div>
-    </div>
-</div>
-
-
-<!--THE REPORTING OUT MODAL-->
-<div class="modal" id="reportOutModal">
-    <div class="modal-dialog">
-        <div class="modal-content bg-secondary">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modal-title">What have you done Today?</h4>
-                <button type="button" class="close closeModal">X</button>
-
-            </div>
-            <div class="modal-body">
-                <div class="card-body" id="job_container">
-                    <div class="form-group">
-                        <textarea id="job_area" class="form-group-lg " placeholder="State What you did today" style="width:100%;"></textarea>
+    <!-- /.content-wrapper -->
+    <div class="content-wrapper">
+        <div class="container">
+            <!-- main content -->
+            <div class="content">
+                <!-- Content Header (Page header) -->
+                <div class="content-header">
+                    <div class="header-icon"><i class="pe-7s-date"></i></div>
+                    <div class="header-title">
+                        <h1>Bomet County Government</h1>
+                        <ol class="breadcrumb">
+                            <li class="active">Add Report</li>
+                            <li><a href="weekly.php"><i class="pe-7s-home"></i>Weekly Reports</a></li>
+                            <li><a href="panels.php">Daily Reports</a></li>
+                            <li><a href="tasks.php">Tasks</a></li>
+                            <li><a href="logout.php">Logout</a></li>
+                        </ol>
                     </div>
+                </div> <!-- /. Content Header (Page header) -->
+                <div class="row" id="tohide">
+                    <div class="form-group">
+                        <label >Week Ending</label>
+                        <br>
+                        <input type="date" id="date" class="form-control col-md-6">
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label class="text-left">State What you did This week</label>
+                        <textarea name="f1-about-yourself" placeholder="Report what you did this week"
+                                  class="form-control text-left"  rows="5" id="work_done"></textarea>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label class="text-left">Challenges faced During the week</label>
+                        <textarea name="f1-about-yourself" placeholder="What challenges did you face"
+                                  class="form-control text-left"  id="challenges" rows="5"></textarea>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label class="text-left">Solutions to Challenges faced</label>
+                        <textarea name="f1-about-yourself" placeholder="What are the possible solutions"
+                                  class="form-control text-left" id="solutions" rows="5"></textarea>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label class="text-left">Explain you engagement in daily activities</label>
+                        <textarea name="f1-about-yourself" placeholder="Were you positively Engaged "
+                                  class="form-control text-left" id="engagement" rows="5"></textarea>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label class="text-left">State Plan For the coming week</label>
+                        <textarea name="f1-about-yourself" placeholder="What is you plan for next week"
+                                  class="form-control text-left" id="plan" rows="5"></textarea>
+                    </div>
+
+
+
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="submit_job" class="btn btn-success ">Submit</button>
-                <button type="button" class="btn btn-danger closeModal">Close</button>
+                <div class="row">
+                    <button type="button" class="btn btn-success col-md-5" id="save" style="margin: 10px">Submit Report</button>
+                    <button class="btn btn-danger md-close col-md-5" onclick="window.location.assign('weekly.php')" style="margin: 10px">Exit</button>
+                </div>
+
+        </div> <!-- /.main content -->
+    </div> <!-- /.container -->
+</div> <!-- /.content-wrapper -->
+
+</div> <!-- ./wrapper -->
+
+
+<!--        //THE MODAL-->
+<div class="modal" id="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Bomet County Government</h4>
             </div>
         </div>
     </div>
 </div>
 
-</body>
+<!-- jQuery -->
+<script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="assets/plugins/jQuery/jquery-1.12.4.min.js" type="text/javascript"></script>
+<!-- jquery-ui -->
+<script src="assets/plugins/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+<!-- Bootstrap js -->
+<script src="assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<!-- lobipanel js -->
+<script src="assets/plugins/lobipanel/lobipanel.min.js" type="text/javascript"></script>
+<!-- animsition js -->
+<script src="assets/plugins/animsition/js/animsition.min.js" type="text/javascript"></script>
+<!-- bootsnav js -->
+<script src="assets/plugins/bootsnav/js/bootsnav.js" type="text/javascript"></script>
+<!-- SlimScroll js -->
+<script src="assets/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<!-- FastClick js-->
+<script src="assets/plugins/fastclick/fastclick.min.js" type="text/javascript"></script>
+<!-- End Core Plugins
+=====================================================================-->
+<!-- Start Page Lavel Plugins
+=====================================================================-->
 
+
+
+
+<!-- Start Theme label Script
+=====================================================================-->
+<!-- Dashboard js -->
+<script src="assets/dist/js/dashboard.js" type="text/javascript"></script>
+<!-- End Theme label Script
+=====================================================================-->
+<script src="assets/plugins/modals/classie.js" type="text/javascript"></script>
+<script src="assets/plugins/modals/modalEffects.js" type="text/javascript"></script>
+</body>
 </html>

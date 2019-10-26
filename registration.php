@@ -1,6 +1,9 @@
 <?php
 session_start();
-
+if($_SESSION['idnumber']==0)
+{
+    header('Location:logout.php');
+}
 ?>
 
 <!DOCTYPE html>

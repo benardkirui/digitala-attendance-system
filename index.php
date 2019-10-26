@@ -1,5 +1,6 @@
 <?php
 session_start();
+$_SESSION['idnumber']=0;
 include "database/DAO.php";
 $_SESSION['message']='';
 $_SESSION['error']='';
